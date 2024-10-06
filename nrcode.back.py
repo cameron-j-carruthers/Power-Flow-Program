@@ -18,11 +18,11 @@ max_vm_pu : Maximum voltage magnitude at the bus in pu
 min_vm_pu : Minimum voltage magnitude at the bus in pu
 coords    : busbard coordinates to plot the bus with multiple points, typically a list of tuples
 """
-pp.create_bus(net, vn_kv=1, name="Bus 1", index=1)
-pp.create_bus(net, vn_kv=1, name="Bus 2", index=2)
-pp.create_bus(net, vn_kv=1, name="Bus 3", index=3)
-pp.create_bus(net, vn_kv=1, name="Bus 4", index=4)
-pp.create_bus(net, vn_kv=1, name="Bus 5", index=5)
+pp.create_bus(net, vn_kv=1.0, name="Bus 1", index=1)
+pp.create_bus(net, vn_kv=1.0, name="Bus 2", index=2)
+pp.create_bus(net, vn_kv=1.0, name="Bus 3", index=3)
+pp.create_bus(net, vn_kv=1.0, name="Bus 4", index=4)
+pp.create_bus(net, vn_kv=1.0, name="Bus 5", index=5)
 
 """
 create_ext_grid
@@ -47,15 +47,15 @@ r0x0_max (float, NaN)            : maximal R/X-ratio to calculate Zero sequence 
 x0x_max (float, NaN)             : maximal X0/X-ratio to calculate Zero sequence internal impedance of ext_grid
 slack_weight (float, default 1.0): Contribution factor for distributed slack power flow calculation (active power balancing) ** only considered in loadflow if calculate_voltage_angles = True
 controllable (bool, NaN)         : True: p_mw, q_mvar and vm_pu limits are enforced for the ext_grid in OPF. The voltage limits set in the ext_grid bus are enforced.
-                                   False: p_mw and vm_pu setpoints are enforced and limits are ignored. The vm_pu setpoint is enforced and limits of the bus table are ignored. defaults to False if “controllable” column exists in DataFrame
+False                            : p_mw and vm_pu setpoints are enforced and limits are ignored. The vm_pu setpoint is enforced and limits of the bus table are ignored. defaults to False if “controllable” column exists in DataFrame
 """
 pp.create_ext_grid(
     net,
     bus=1,
-    vm_pu=1,
-    va_degree=0,
-    max_p_mw=10,
-    min_p_mw=-10,
+    vm_pu=1.0,
+    va_degree=0.0,
+    max_p_mw=10.0,
+    min_p_mw=-10.0,
     controllable=True
 )
 
@@ -73,8 +73,8 @@ name (string, None)              : The name for this generator
 index (int, None)                : Force a specified ID if it is available. If None, the index one higher than the highest already existing index is selected.
 scaling (float, 1.0)             : scaling factor which for the active power of the generator
 type (string, None)              : type variable to classify generators
-controllable (bool, NaN)         : True: p_mw, q_mvar and vm_pu limits are enforced for this generator in OPF
-                                   False: p_mw and vm_pu setpoints are enforced and limits are ignored. defaults to True if “controllable” column exists in DataFrame
+controllable (bool, NaN)         : True                                            : p_mw, q_mvar and vm_pu limits are enforced for this generator in OPF
+False                            : p_mw and vm_pu setpoints are enforced and limits are ignored. defaults to True if “controllable” column exists in DataFrame
 slack_weight (float, default 0.0): Contribution factor for distributed slack power flow calculation (active power balancing)
 
 powerflow
@@ -90,9 +90,10 @@ min_p_mw (float, default NaN)  : Minimum active power injection - necessary for 
 max_q_mvar (float, default NaN): Maximum reactive power injection - necessary for OPF
 min_q_mvar (float, default NaN): Minimum reactive power injection - necessary for OPF
 min_vm_pu (float, default NaN) : Minimum voltage magnitude. If not set the bus voltage limit is taken.
-                                 necessary for OPF.
+necessary for OPF.
+
 max_vm_pu (float, default NaN) : Maximum voltage magnitude. If not set the bus voltage limit is taken.
-                                 necessary for OPF
+necessary for OPF
 """
 pp.create_gen(net, 
                 bus=2, 
@@ -101,8 +102,8 @@ pp.create_gen(net,
                 controllable=True,
                 #max_p_mw=0.8830, 
                 #min_p_mw=0.8830, 
-                max_q_mvar=1,
-                min_q_mvar=-1,)
+                max_q_mvar=1.0,
+                min_q_mvar=-1.0,)
                 #min_vm_pu=1,
                 #max_vm_pu=1)
 pp.create_gen(net, 
@@ -112,8 +113,8 @@ pp.create_gen(net,
                 controllable=True,
                 #max_p_mw=0.2076, 
                 #min_p_mw=0.2076, 
-                max_q_mvar=1,
-                min_q_mvar=-1,)
+                max_q_mvar=1.0,
+                min_q_mvar=-1.0,)
                 #min_vm_pu=1,
                 #max_vm_pu=1)
 
@@ -121,7 +122,6 @@ pp.create_gen(net,
 """
 create_shunt
 Creates a shunt element
-net (pandapowerNet) - The pandapower network in which the element is created <- REQUIRED
 
 net (pandapowerNet)       : The pandapower network in which the element is created <- REQUIRED
 bus                       : bus number of bus to whom the shunt is connected to <- REQUIRED
@@ -206,40 +206,73 @@ create_line uses standard lines, so i will use from_parameters here
 pandapower.create_line_from_parameters(net, from_bus, to_bus, length_km, r_ohm_per_km, x_ohm_per_km, c_nf_per_km, max_i_ka, name=None, index=None, type=None, geodata=None, in_service=True, df=1.0, parallel=1, g_us_per_km=0.0, max_loading_percent=nan, alpha=nan, temperature_degree_celsius=nan, r0_ohm_per_km=nan, x0_ohm_per_km=nan, c0_nf_per_km=nan, g0_us_per_km=0, endtemp_degree=nan, **kwargs)
 Creates a line element in net[“line”] from line parameters.
 
-net                                         : The net within this line should be created <- REQUIRED
-from_bus (int)                              : ID of the bus on one side which the line will be connected with <- REQUIRED
-to_bus (int)                                : ID of the bus on the other side which the line will be connected with <- REQUIRED
-length_km (float)                           : The line length in km <- REQUIRED
-r_ohm_per_km (float)                        : line resistance in ohm per km <- REQUIRED
-x_ohm_per_km (float)                        : line reactance in ohm per km <- REQUIRED
-c_nf_per_km (float)                         : line capacitance (line-to-earth) in nano Farad per km <- REQUIRED
-r0_ohm_per_km (float)                       : zero sequence line resistance in ohm per km <- REQUIRED
-x0_ohm_per_km (float)                       : zero sequence line reactance in ohm per km <- REQUIRED
-c0_nf_per_km (float)                        : zero sequence line capacitance in nano Farad per km <- REQUIRED
-max_i_ka (float)                            : maximum thermal current in kilo Ampere <- REQUIRED
-name (string, None)                         : A custom name for this line
-index (int, None)                           : Force a specified ID if it is available. If None, the index one higher than the highest already existing index is selected.
-in_service (boolean, True)                  : True for in_service or False for out of service
-type (str, None)                            : type of line (“ol” for overhead line or “cs” for cable system)
-df (float, 1)                               : derating factor                                 : maximal current of line in relation to nominal current of line (from 0 to 1)
-g_us_per_km (float, 0)                      : dielectric conductance in micro Siemens per km
-g0_us_per_km (float, 0)                     : zero sequence dielectric conductance in micro Siemens per km
-parallel (integer, 1)                       : number of parallel line systems
-geodata (array, default None, shape= (,2))  : The geodata of the line. The first row should be the coordinates of bus a and the last should be the coordinates of bus b. The points in the middle represent the bending points of the line
-max_loading_percent (float)                 : maximum current loading (only needed for OPF)
-alpha (float)                               : temperature coefficient of resistance           : R(T) = R(T_0) * (1 + alpha * (T - T_0)))
-temperature_degree_celsius (float)          : line temperature for which line resistance is adjusted
-tdpf (bool)                                 : whether the line is considered in the TDPF calculation
-wind_speed_m_per_s (float)                  : wind speed at the line in m/s (TDPF)
-wind_angle_degree (float)                   : angle of attack between the wind direction and the line (TDPF)
-conductor_outer_diameter_m (float)          : outer diameter of the line conductor in m (TDPF)
-air_temperature_degree_celsius (float)      : ambient temperature in °C (TDPF)
-reference_temperature_degree_celsius (float): reference temperature in °C for which r_ohm_per_km for the line is specified (TDPF)
-solar_radiation_w_per_sq_m (float)          : solar radiation on horizontal plane in W/m² (TDPF)
-solar_absorptivity (float)                  : Albedo factor for absorptivity of the lines (TDPF)
-emissivity (float)                          : Albedo factor for emissivity of the lines (TDPF)
-r_theta_kelvin_per_mw (float)               : thermal resistance of the line (TDPF, only for simplified method)
-mc_joule_per_m_k (float)                    : specific mass of the conductor multiplied by the specific thermal capacity of the material (TDPF, only for thermal inertia consideration with tdpf_delay_s parameter)
+net - The net within this line should be created <- REQUIRED
+
+from_bus (int) - ID of the bus on one side which the line will be connected with <- REQUIRED
+
+to_bus (int) - ID of the bus on the other side which the line will be connected with <- REQUIRED
+
+length_km (float) - The line length in km <- REQUIRED
+
+r_ohm_per_km (float) - line resistance in ohm per km <- REQUIRED
+
+x_ohm_per_km (float) - line reactance in ohm per km <- REQUIRED
+
+c_nf_per_km (float) - line capacitance (line-to-earth) in nano Farad per km <- REQUIRED
+
+r0_ohm_per_km (float) - zero sequence line resistance in ohm per km <- REQUIRED
+
+x0_ohm_per_km (float) - zero sequence line reactance in ohm per km <- REQUIRED
+
+c0_nf_per_km (float) - zero sequence line capacitance in nano Farad per km <- REQUIRED
+
+max_i_ka (float) - maximum thermal current in kilo Ampere <- REQUIRED
+
+name (string, None) - A custom name for this line
+
+index (int, None) - Force a specified ID if it is available. If None, the index one higher than the highest already existing index is selected.
+
+in_service (boolean, True) - True for in_service or False for out of service
+
+type (str, None) - type of line (“ol” for overhead line or “cs” for cable system)
+
+df (float, 1) - derating factor: maximal current of line in relation to nominal current of line (from 0 to 1)
+
+g_us_per_km (float, 0) - dielectric conductance in micro Siemens per km
+
+g0_us_per_km (float, 0) - zero sequence dielectric conductance in micro Siemens per km
+
+parallel (integer, 1) - number of parallel line systems
+
+geodata (array, default None, shape= (,2)) - The geodata of the line. The first row should be the coordinates of bus a and the last should be the coordinates of bus b. The points in the middle represent the bending points of the line
+
+max_loading_percent (float) - maximum current loading (only needed for OPF)
+
+alpha (float) - temperature coefficient of resistance: R(T) = R(T_0) * (1 + alpha * (T - T_0)))
+
+temperature_degree_celsius (float) - line temperature for which line resistance is adjusted
+
+tdpf (bool) - whether the line is considered in the TDPF calculation
+
+wind_speed_m_per_s (float) - wind speed at the line in m/s (TDPF)
+
+wind_angle_degree (float) - angle of attack between the wind direction and the line (TDPF)
+
+conductor_outer_diameter_m (float) - outer diameter of the line conductor in m (TDPF)
+
+air_temperature_degree_celsius (float) - ambient temperature in °C (TDPF)
+
+reference_temperature_degree_celsius (float) - reference temperature in °C for which r_ohm_per_km for the line is specified (TDPF)
+
+solar_radiation_w_per_sq_m (float) - solar radiation on horizontal plane in W/m² (TDPF)
+
+solar_absorptivity (float) - Albedo factor for absorptivity of the lines (TDPF)
+
+emissivity (float) - Albedo factor for emissivity of the lines (TDPF)
+
+r_theta_kelvin_per_mw (float) - thermal resistance of the line (TDPF, only for simplified method)
+
+mc_joule_per_m_k (float) - specific mass of the conductor multiplied by the specific thermal capacity of the material (TDPF, only for thermal inertia consideration with tdpf_delay_s parameter)
 """
 pp.create_line_from_parameters(
     net=net,
@@ -252,7 +285,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=1
 )
 
@@ -267,7 +300,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=2
 )
 
@@ -282,7 +315,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=3
 )
 
@@ -297,7 +330,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=4
 )
 
@@ -312,7 +345,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=5
 )
 
@@ -327,7 +360,7 @@ pp.create_line_from_parameters(
     r0_ohm_per_km=0.0099,
     x0_ohm_per_km=0.099,
     c0_nf_per_km=0,
-    max_i_ka=1, # i am not sure about this since i dont think its given?
+    max_i_ka=1.0, # i am not sure about this since i dont think its given?
     index=6
 )
 
@@ -490,7 +523,6 @@ total_p_loss = net.res_line.pl_mw.sum()
 total_q_loss = net.res_line.ql_mvar.sum()
 print(f"\nTotal Line Active Losses (P_loss): {total_p_loss:.4f} MW")
 print(f"Total Line Reactive Losses (Q_loss): {total_q_loss:.4f} MVAr")
-
 
 
 
