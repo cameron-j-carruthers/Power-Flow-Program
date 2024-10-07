@@ -19,8 +19,8 @@ pp.create_load(net, bus=3, p_mw=1.7137, q_mvar=0.5983, name="Load 4")
 pp.create_load(net, bus=4, p_mw=1.7355, q_mvar=0.5496, name="Load 5")
 
 # Add voltage controllers for buses 4 and 5, based on the capcitor symbol in the diagram
-pp.create_gen(net, bus=3, p_mw=0, sn_mva=1.0, name="V_control_4", controllable=True, max_q_mvar=100, min_q_mvar=-100)
-pp.create_gen(net, bus=4, p_mw=0, sn_mva=0.8, name="V_control_5", controllable=True, max_q_mvar=100, min_q_mvar=-100)
+pp.create_gen(net, bus=3, p_mw=0, sn_mva=1.0, name="Voltage Controller 4", controllable=True, max_q_mvar=100, min_q_mvar=-100)
+pp.create_gen(net, bus=4, p_mw=0, sn_mva=0.8, name="Voltage Controller 5", controllable=True, max_q_mvar=100, min_q_mvar=-100)
 
 # Line parameters
 r_pu = 0.0099
@@ -45,7 +45,7 @@ total_loss = net.res_line.pl_mw.sum()
 
 # Print results
 print("Voltage Angles (θ) for Buses 1-5 (in degrees):")
-for i, angle in enumerate(va_degree, 1):
+for i, angle in enumerate(va_degree, 1): # va_degree.round().astype(int)
     print(f"{i} {angle}")
 
 print("\nVoltage Magnitudes (V) for Buses 4 and 5 (in p.u.):")
