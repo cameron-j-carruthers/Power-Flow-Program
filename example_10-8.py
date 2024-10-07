@@ -2,7 +2,7 @@ import pandapower as pp
 import numpy as np
 
 # Create an empty network
-net = pp.create_empty_network(sn_mva=100)
+net = pp.create_empty_network()
 
 # Add buses
 for i in range(1, 6):
@@ -16,7 +16,7 @@ pp.create_gen(net, bus=2, p_mw=0.2076, vm_pu=1.0, name="G3")
 # Add loads (slight adjustment to Load 5)
 pp.create_load(net, bus=2, p_mw=0.2, q_mvar=0.1, name="Load 3")
 pp.create_load(net, bus=3, p_mw=1.7137, q_mvar=0.5983, name="Load 4")
-pp.create_load(net, bus=4, p_mw=1.7355, q_mvar=0.5496, name="Load 5")  # Tiny adjustment
+pp.create_load(net, bus=4, p_mw=1.7355, q_mvar=0.5496, name="Load 5")
 
 # Add voltage controllers for buses 4 and 5, based on the capcitor symbol in the diagram
 pp.create_gen(net, bus=3, p_mw=0, sn_mva=1.0, name="V_control_4", controllable=True, max_q_mvar=100, min_q_mvar=-100)
