@@ -19,7 +19,6 @@ pp.create_load(net, bus=3, p_mw=1.7137, q_mvar=0.5983, name="Load 4")
 pp.create_load(net, bus=4, p_mw=1.7355, q_mvar=0.5496, name="Load 5")  # Tiny adjustment
 
 # Add voltage controllers for buses 4 and 5, based on the capcitor symbol in the diagram
-# According to Claude: These act as synchronous condensers, injecting or absorbing reactive power to maintain the voltage at 1.0 p.u.
 pp.create_gen(net, bus=3, p_mw=0, vm_pu=1.0, sn_mva=1.0, name="V_control_4", controllable=True, max_q_mvar=100, min_q_mvar=-100)
 pp.create_gen(net, bus=4, p_mw=0, vm_pu=1.0, sn_mva=0.8, name="V_control_5", controllable=True, max_q_mvar=100, min_q_mvar=-100)
 
