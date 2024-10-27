@@ -30,7 +30,7 @@ x_pu = 0.099
 for from_bus, to_bus in [(0,1), (1,2), (0,3), (1,3), (2,4), (3,4)]:
     pp.create_line_from_parameters(net, from_bus=from_bus, to_bus=to_bus, length_km=1, 
                                    r_ohm_per_km=r_pu, x_ohm_per_km=x_pu, c_nf_per_km=0, 
-                                   max_i_ka=1, name=f"Line {from_bus+1}-{to_bus+1}")
+                                   max_i_ka=0.001, name=f"Line {from_bus+1}-{to_bus+1}")
 
 # Run power flow with increased precision
 pp.runpp(net, calculate_voltage_angles=True, init='dc', enforce_q_lims=True, 
@@ -62,3 +62,5 @@ print(f"\nTotal Line Active Losses (P_loss): {total_loss:.4f} MW")
 print("\nReactive Power Injection from Voltage Controllers:")
 for i, q in enumerate(net.res_gen.q_mvar.values[1:], 1):  # Skip slack bus
     print(f"Bus {i+1}: {q:.4f} MVAr")
+
+print(net.res_line)
